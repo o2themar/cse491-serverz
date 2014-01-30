@@ -2,6 +2,7 @@
 import random
 import socket
 import time
+import urlparse
 
 def main():
     s = socket.socket()         # Create a socket object
@@ -23,9 +24,13 @@ def main():
         
 def handle_connection(conn):
     # Receiving the data to be processed
-    data = conn.recv(1000)
-    getPost = data.split(' ')[0]
-    path = data.split(' ')[1]
+    request = conn.recv(1000)
+    request_line = request.split('\r\n')[0].split(' ')
+    
+    http_method = request_line[0]
+    
+    parsed_url = urlparse.urlparse(request_line[1])
+    path = parsed_url[2]
     
     # Message responses
     response_main_message = 'HTTP/1.0 200 OK\t\n' + \
@@ -55,23 +60,112 @@ def handle_connection(conn):
                      '<html><body><h1>Image</h1>This is aliomar\'s Web server.</body></html>'
 
     # Separating the links for main page into links for content files and images.
-    if getPost == 'POST':
-        conn.send("Hello world!")
-        conn.close()
-        return
+    if http_method == 'POST':
 
-    elif path == '/':
-        conn.send(response_main_message)
-    elif path == '/content':
-        conn.send(responose_content)
-    elif path == '/file':
-        conn.send(response_image)
-    elif path == '/image':
-        conn.send(response_image)
+        if path == '/':
+        
+            handle_index(conn,'')
+    
+        elif path == '/submit':
+        
+            handle_submit(conn,request.split('\r\n')[-1])
+            
+            
     else:
-        conn.send('<h2>This page does not exist!</h2>')
+        if path == '/':
+            handle_index(conn,'')
+
+        elif path == '/content':
+                    
+            handle_content(conn,'')
+                
+        elif path == '/file':
+                    
+            handle_file(conn,'')
+                
+        elif path == '/image':
+                    
+            handle_image(conn,'')
+                
+        elif path == '/submit':
+                    
+            handle_submit(conn, parsed_url[4])
+
+        else:
+            
+            handle_error(conn)
 
     conn.close()
+
+def handle_index(c, params):
+    
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           '<h1>Hello, world.</h1>' + \
+           'This is aliomar\'s Web server.<br>' + \
+           '<a href= /content>Content</a><br>' + \
+           '<a href= /file>File</a><br>' + \
+           '<a href= /image>Image</a><br>' + \
+           'GET Form' + \
+           '<form action="/submit" method="GET">\n' + \
+           '<p>First Name: <input type="text" name="firstname"></p>\n' + \
+           '<p>Last Name: <input type="text" name="lastname"></p>\n' + \
+           '<input type="submit" value="Submit">\n\n' + \
+           '</form>' + \
+           'POST Form' + \
+           '<form action="/submit" method="POST">\n' + \
+           '<p>First Name: <input type="text" name="firstname"></p>\n' + \
+           '<p>Last Name: <input type="text" name="lastname"></p>\n' + \
+           '<input type="submit" value="Submit">\n\n' + \
+           '</form>')
+
+
+def handle_content(c, params):
+    
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           '<h1>Content page</h1>' + \
+           'words words words')
+
+
+def handle_file(c, params):
+    
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           '<h1>File page</h1>' + \
+           'cabinet')
+
+
+def handle_image(c, params):
+    
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           '<h1>Image page</h1>' + \
+           'imagine that')
+
+
+def handle_submit(c, params):
+    
+    namestring = params.split('&')
+    
+    first_name = namestring[0].split('=')[1]
+    last_name = namestring[1].split('=')[1]
+    
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           'Hello Mr. %s %s.' % (first_name, last_name))
+
+def handle_error(c):
+    message = 'Something bad happend. Call IT....'
+    c.send('HTTP/1.0 200 OK\r\n' + \
+           'Content-type: text/html\r\n' + \
+           '\r\n' + \
+           message)
 
 if __name__ == '__main__':
     main()
