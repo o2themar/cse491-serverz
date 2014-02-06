@@ -6,10 +6,15 @@ import urlparse
 
 
 
-#global header
+#global headers
 header = 'HTTP/1.0 200 OK\r\n' + \
          'Content-type: text/html\r\n' + \
          '\r\n'
+
+http_404_header = 'HTTP/1.0 404 Not found\r\n' + \
+                        'Content-type: text/html\r\n' + \
+                        'Connection: close\r\n' + \
+                        '\r\n'
 
 def main():
     s = socket.socket()         # Create a socket object
@@ -41,6 +46,7 @@ def handle_connection(conn):
         url = urlparse.urlparse(f_line[1])
         loc = url[2]
         if method == 'POST':
+            print loc
             if loc == '/submit':
                 handle_submit(conn, request.split('\r\n')[-1])
             else:
