@@ -1,12 +1,27 @@
 #! /usr/bin/env python
 import sys
 import requests
+import urlparse
 
 url = sys.argv[1]
 
 payload = { 'key' : 'value' }
 r = requests.post(url, data=payload)
 
+#l = url.split('/')
+#user = l[len(l)-1]
+
+#POST '/' + user
+#	Content-Length	181
+#	Accept-Encoding identity, deflate, compress, gzip
+#	Connection 		keep-alive
+#	Accept			*/*
+#	User-Agent		python-requests/0.14.0 CPython/2.7.3 Darwin/11.4.0
+#	Host			requestb.in
+#	Content-Type	multipart/form-data;  boundary=a480c8e5c6f94a16866e8c8f8efdd1c0
+
+print r.request.headers
+print 'Body: %s' % (repr(r.request.body),)
 print r.status_code
 print r.text
 

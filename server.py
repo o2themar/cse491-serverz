@@ -4,6 +4,13 @@ import socket
 import time
 import urlparse
 
+
+
+#global header
+header = 'HTTP/1.0 200 OK\r\n' + \
+         'Content-type: text/html\r\n' + \
+         '\r\n'
+
 def main():
     s = socket.socket()         # Create a socket object
     host = socket.getfqdn() # Get local machine name
@@ -25,147 +32,86 @@ def main():
 def handle_connection(conn):
     # Receiving the data to be processed
     request = conn.recv(1000)
-    request_line = request.split('\r\n')[0].split(' ')
     
-    http_method = request_line[0]
-    
-    parsed_url = urlparse.urlparse(request_line[1])
-    path = parsed_url[2]
-    
-    # Message responses
-    response_main_message = 'HTTP/1.0 200 OK\t\n' + \
-                            'Content-type: text/html\r\n' + \
-                            '\r\n' + \
-                            '<html><body>' + \
-                            '<h1>Hello, world.</h1>' + \
-                            'This is aliomar\'s Web server.' + \
-                            '<br/><a href="/content">Content</a>' + \
-                            '<br/><a href="/file">File</a>' + \
-                            '<br/><a href="/image">Image</a>' + \
-                            '</body></html>'
 
-    responose_content = 'HTTP/1.0 200 OK\r\n' + \
-                        'Content-type: text/html\r\n' + \
-                        '\r\n' + \
-                        '<html><body><h1>Content</h1>This is aliomar\'s Web server.</body></html>'
-
-    response_file = 'HTTP/1.0 200 OK\r\n' + \
-                    'Content-type: text/html\r\n' + \
-                    '\r\n' + \
-                    '<html><body><h1>File</h1>This is aliomar\'s Web server.</body></html>'
-
-    response_image = 'HTTP/1.0 200 OK\r\n' + \
-                     'Content-type: text/html\r\n' + \
-                     '\r\n' + \
-                     '<html><body><h1>Image</h1>This is aliomar\'s Web server.</body></html>'
-
-    # Separating the links for main page into links for content files and images.
-    if http_method == 'POST':
-
-        if path == '/':
         
-            handle_index(conn,'')
-    
-        elif path == '/submit':
-        
-            handle_submit(conn,request.split('\r\n')[-1])
-            
-            
-    else:
-        if path == '/':
-            handle_index(conn,'')
-
-        elif path == '/content':
-                    
-            handle_content(conn,'')
-                
-        elif path == '/file':
-                    
-            handle_file(conn,'')
-                
-        elif path == '/image':
-                    
-            handle_image(conn,'')
-                
-        elif path == '/submit':
-                    
-            handle_submit(conn, parsed_url[4])
-
+    if len(request):
+        f_line = request.splitlines()[0].split(' ')
+        method = f_line[0]
+        url = urlparse.urlparse(f_line[1])
+        loc = url[2]
+        if method == 'POST':
+            if loc == '/submit':
+                handle_submit(conn, request.split('\r\n')[-1])
+            else:
+                handle_post(conn, '')
         else:
-            
-            handle_error(conn)
+            if loc == '/':
+                handle_index(conn, '')
+            elif loc == '/content':
+                handle_content(conn, '')
+            elif loc == '/file':
+                handle_file(conn, '')
+            elif loc == '/image':
+                handle_image(conn, '')
+            elif loc == '/form':
+                handle_form(conn, '')
+            elif loc == '/submit':
+                handle_submit(conn, url[4])
+    else:
+        handle_error(conn)
 
     conn.close()
 
 def handle_index(c, params):
-    
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
-           '<h1>Hello, world.</h1>' + \
-           'This is aliomar\'s Web server.<br>' + \
-           '<a href= /content>Content</a><br>' + \
-           '<a href= /file>File</a><br>' + \
-           '<a href= /image>Image</a><br>' + \
-           'GET Form' + \
-           '<form action="/submit" method="GET">\n' + \
-           '<p>First Name: <input type="text" name="firstname"></p>\n' + \
-           '<p>Last Name: <input type="text" name="lastname"></p>\n' + \
-           '<input type="submit" value="Submit">\n\n' + \
-           '</form>' + \
-           'POST Form' + \
-           '<form action="/submit" method="POST">\n' + \
-           '<p>First Name: <input type="text" name="firstname"></p>\n' + \
-           '<p>Last Name: <input type="text" name="lastname"></p>\n' + \
-           '<input type="submit" value="Submit">\n\n' + \
-           '</form>')
+    c.send(header + \
+           '<h1>/home</h1>' + \
+           '<ul>' + \
+           '<li><a href="./content">content</a></li>' + \
+           '<li><a href="./file">file</a></li>' + \
+           '<li><a href="./image">image</a></li>' + \
+           '<li><a href="./form">form</a></li>' + \
+           '</ul>')
 
 
 def handle_content(c, params):
     
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
-           '<h1>Content page</h1>' + \
-           'words words words')
+    c.send(header + '<h1>/content<\h1>')
 
 
 def handle_file(c, params):
     
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
-           '<h1>File page</h1>' + \
-           'cabinet')
+    c.send(header + '<h1>/file<\h1>')
 
 
 def handle_image(c, params):
     
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
-           '<h1>Image page</h1>' + \
-           'imagine that')
+    c.send(header + '<h1>/image<\h1>')
 
 
-def handle_submit(c, params):
-    
-    namestring = params.split('&')
-    
-    first_name = namestring[0].split('=')[1]
-    last_name = namestring[1].split('=')[1]
-    
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
-           'Hello Mr. %s %s.' % (first_name, last_name))
+def handle_form(c, params):
+    c.send(header + '<h1>/form</h1>' + \
+           "<form action='submit' method='GET'>" + \
+           "first name: <input type='text' name='firstname'></br>" + \
+           "last name: <input type='text' name='lastname'></br>" + \
+           "<input type='submit' value=Submit'></br>" + \
+           "</form>")
 
 def handle_error(c):
     message = 'Something bad happend. Call IT....'
-    c.send('HTTP/1.0 200 OK\r\n' + \
-           'Content-type: text/html\r\n' + \
-           '\r\n' + \
+    c.send(header + \
            message)
+
+
+def handle_post(c, params):
+    conn.send(header + '<h1>handling post</h1>')
+
+def handle_submit(c, params):
+    q = params.split('&')
+    firstname = q[0].split('=')[1]
+    lastname = q[1].split('=')[1]
+    c.send(header + "<p>Hello Mr. %s %s.<\p>" % (firstname, lastname))
+
 
 if __name__ == '__main__':
     main()
