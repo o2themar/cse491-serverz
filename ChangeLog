@@ -1,6 +1,12 @@
+2012-01-21
+
+ * added responses for different GET requests
+ * added a default response for POST requests
+
+2014-01-14  Nick Rutowski
+
+ * added basic html response 
+
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
  * Initialized repository, created server.py and README.
- * Modified code to return an HTTP 1.0 response with a ‘200 OK’ response line, a Content-type of text/html and a message body with header Hello, world  and the rest of the body saying “this is aliomars Web server”.
- * Added in the optional print c.recv(1000)
-	* Found out that it prints information about the user that connected such as information about the OS, browser, language. It also contains information about the server.
