@@ -4,6 +4,7 @@ from StringIO import StringIO
 
 test_app = TestApp(make_app())
 
+
 class FakeConnection(object):
     """
     A fake connection class that mimics a real TCP socket for the purpose

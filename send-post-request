@@ -2,15 +2,19 @@
 import sys
 import requests
 <<<<<<< HEAD
+<<<<<<< HEAD
 import urlparse
 =======
 >>>>>>> master
+=======
+>>>>>>> c2630448bab3b728043e10279633e9f83db8a95e
 
 url = sys.argv[1]
 
 payload = { 'key' : 'value' }
 r = requests.post(url, data=payload)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #l = url.split('/')
 #user = l[len(l)-1]
@@ -28,6 +32,8 @@ print r.request.headers
 print 'Body: %s' % (repr(r.request.body),)
 =======
 >>>>>>> master
+=======
+>>>>>>> c2630448bab3b728043e10279633e9f83db8a95e
 print r.status_code
 print r.text
 
