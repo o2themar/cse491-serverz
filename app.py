@@ -1,6 +1,7 @@
 import jinja2
 import re
-
+import os
+# Some code from badsauce
 from cgi import parse_qs, escape, FieldStorage
 
 def base_app(environ, start_response):
@@ -8,6 +9,30 @@ def base_app(environ, start_response):
 
 def make_app():
     return base_app
+
+def serve_image(environ, start_response, jinja):
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    dirname = dirname + "\\"
+
+    fp = open(dirname + "", "rb")
+    data = fp.read()
+
+    fp.close()
+
+    start_response("200 OK", [('Content-type', "image/jpeg")])
+    return [data]
+
+def serve_file(environ, start_response, jinja):
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    dirname = dirname + "\\"
+    
+    fp = open(dirname + "bmw.jpeg", "rb")
+    data = fp.read()
+    
+    fp.close()
+    
+    start_response("200 OK", [('Content-type', "text/plain")])
+    return [data]
 
 def handle_submit(environ, start_response, jinja):
     start_response('200 OK', [('Content-Type', 'text/html')])
@@ -35,7 +60,7 @@ def handle_form(environ, start_response, jinja):
 
 def handle_root(environ, start_response, jinja):
     start_response('200 OK', [('Content-Type', 'text/html')])
-    params = {'title':'Welcome to Zombo.com (this is not Zombo.com)'}
+    params = {'title':'Welcome to my webserver'}
     return jinja.get_template('index.html').render(params)
 
 def handle_content(environ, start_response, jinja):

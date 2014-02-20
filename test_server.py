@@ -49,22 +49,21 @@ def test_file():
     assert resp.status == '200 OK'
 
 def test_GET_submit():
-    resp = test_app.get('/submit?firstname=Joe&lastname=Man')
+    resp = test_app.get('/submit?firstname=Omar&lastname=Ali')
     assert resp.status == '200 OK'
-    assert 'Joe Man' in resp
+    assert 'Omar Ali' in resp
 
-def test_form():
-    resp = test_app.get('/form')
-    assert resp.status == '200 OK'
 
 def test_POST_submit():
     resp = test_app.get('/form')
+    print resp
     form = resp.form
-    form['firstname'] = 'Joe'
-    form['lastname'] = 'Man'
+    print form
+    form['firstname'] = 'Omar'
+    form['lastname'] = 'Ali'
     resp2 = form.submit('submit')
     assert resp2.status == '200 OK'
-    assert 'Joe Man' in resp2
+    assert 'Omar Ali' in resp2
 
 def test_404():
     resp = test_app.get('/thislinkisgood',status=404)
