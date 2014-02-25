@@ -5,9 +5,9 @@ from urlparse import urlparse
 from StringIO import StringIO
 
 import quixote
-from quixote.demo import create_publisher
+#from quixote.demo import create_publisher
 #from quixote.demo.mini_demo import create_publisher
-#from quixote.demo.altdemo import create_publisher
+from quixote.demo.altdemo import create_publisher
 
 _the_app = None
 def make_app():

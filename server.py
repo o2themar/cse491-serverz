@@ -42,13 +42,13 @@ def handle_connection(conn):
     env['wsgi.run_once'] = False
     env['wsgi.url_scheme'] = 'http'
 
-def start_response(status, response_headers):
-    conn.send('HTTP/1.0 ')
-    conn.send(status)
-    conn.send('\r\n')
-    for pair in response_headers:
-        key, header = pair
-        conn.send(key + ': ' + header + '\r\n')
+    def start_response(status, response_headers):
+    	conn.send('HTTP/1.0 ')
+    	conn.send(status)
+    	conn.send('\r\n')
+    	for pair in response_headers:
+        	key, header = pair
+        	conn.send(key + ': ' + header + '\r\n')
         conn.send('\r\n')
 
     content = ''
