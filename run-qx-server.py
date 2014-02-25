@@ -1,14 +1,23 @@
-#!/usr/bin/env python
 import random
 import socket
 import time
-import sys
 from urlparse import urlparse
 from StringIO import StringIO
 
-from app import make_app
-from wsgiref.validate import validator
+import quixote
+from quixote.demo import create_publisher
+#from quixote.demo.mini_demo import create_publisher
+#from quixote.demo.altdemo import create_publisher
 
+_the_app = None
+def make_app():
+    global _the_app
+
+    if _the_app is None:
+        p = create_publisher()
+        _the_app = quixote.get_wsgi_app()
+
+    return _the_app
 
 def handle_connection(conn):
     # Start reading in data from the connection
@@ -24,31 +33,23 @@ def handle_connection(conn):
     for line in data.split('\r\n')[:-2]:
         k, v = line.split(': ', 1)
         headers[k.lower()] = v
-
+        
     # Parse out the path and related info
     path = urlparse(req.split(' ', 3)[1])
     env['REQUEST_METHOD'] = 'GET'
     env['PATH_INFO'] = path[2]
     env['QUERY_STRING'] = path[4]
     env['CONTENT_TYPE'] = 'text/html'
-    env['CONTENT_LENGTH'] = '0'
+    env['CONTENT_LENGTH'] = 0
     env['SCRIPT_NAME'] = ''
-    env['SERVER_NAME'] = 'Totally Cool Server'
-    env['SERVER_PORT'] = conn.getsockname()[0]
-    env['wsgi.version'] = (1, 0)
-    env['wsgi.errors'] = sys.stderr
-    env['wsgi.multithread'] = False
-    env['wsgi.multiprocess'] = False
-    env['wsgi.run_once'] = False
-    env['wsgi.url_scheme'] = 'http'
 
-def start_response(status, response_headers):
-    conn.send('HTTP/1.0 ')
-    conn.send(status)
-    conn.send('\r\n')
-    for pair in response_headers:
-        key, header = pair
-        conn.send(key + ': ' + header + '\r\n')
+    def start_response(status, response_headers):
+        conn.send('HTTP/1.0 ')
+        conn.send(status)
+        conn.send('\r\n')
+        for pair in response_headers:
+            key, header = pair
+            conn.send(key + ': ' + header + '\r\n')
         conn.send('\r\n')
 
     content = ''
@@ -63,7 +64,6 @@ def start_response(status, response_headers):
 
     env['wsgi.input'] = StringIO(content)
     appl = make_app()
-    validator_app = validator(appl)
     result = appl(env, start_response)
     for data in result:
         conn.send(data)
@@ -92,6 +92,3 @@ def main():
 
 if __name__ == '__main__':
    main()
-
-
-
