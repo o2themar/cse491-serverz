@@ -3,6 +3,11 @@ import random
 import socket
 import time
 import sys
+import Cookie
+import quixote
+import imageapp
+
+#from quixote.demo.altdemo import create_publisher
 from urlparse import urlparse
 from StringIO import StringIO
 
@@ -33,7 +38,7 @@ def handle_connection(conn):
     env['CONTENT_TYPE'] = 'text/html'
     env['CONTENT_LENGTH'] = '0'
     env['SCRIPT_NAME'] = ''
-    env['SERVER_NAME'] = 'Totally Cool Server'
+    env['SERVER_NAME'] = 'Omar\'s server!'
     env['SERVER_PORT'] = conn.getsockname()[0]
     env['wsgi.version'] = (1, 0)
     env['wsgi.errors'] = sys.stderr
