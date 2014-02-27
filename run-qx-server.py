@@ -9,6 +9,8 @@ import quixote
 #from quixote.demo.mini_demo import create_publisher
 from quixote.demo.altdemo import create_publisher
 
+
+
 _the_app = None
 def make_app():
     global _the_app
@@ -18,6 +20,7 @@ def make_app():
         _the_app = quixote.get_wsgi_app()
 
     return _the_app
+
 
 def handle_connection(conn):
     # Start reading in data from the connection

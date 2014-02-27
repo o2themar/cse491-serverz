@@ -41,6 +41,8 @@ def handle_connection(conn):
     env['wsgi.multiprocess'] = False
     env['wsgi.run_once'] = False
     env['wsgi.url_scheme'] = 'http'
+    env['HTTP_COOKIE'] = headers['cookie']
+
 
     def start_response(status, response_headers):
     	conn.send('HTTP/1.0 ')

@@ -99,3 +99,5 @@ def handle_connection(environ,start_response):
     if encodeFlag:
     	content = content.encode('latin-1', 'replace')
     return [content]
+
+

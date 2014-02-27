@@ -12,9 +12,11 @@ imageapp.setup()
 p = imageapp.create_publisher()
 wsgi_app = quixote.get_wsgi_app()
 
+
 ### now that we have a WSGI app, we can run it in the WSGI reference server:
 
 from wsgiref.simple_server import make_server
+
 
 host = socket.getfqdn() # Get local machine name
 #port = random.randint(8000, 9999)
