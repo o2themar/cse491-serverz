@@ -5,15 +5,12 @@ import random
 # here is the code needed to create a WSGI application interface to
 # a Quixote app:
 
-import quixote
-from quixote.demo import create_publisher
-from quixote.demo.mini_demo import create_publisher
-from quixote.demo.altdemo import create_publisher
-
-p = create_publisher()
-wsgi_app = quixote.get_wsgi_app()
-
 from wsgiref.simple_server import make_server
+
+from refapp import make_app
+
+the_wsgi_app = make_app()
+
 
 
 host = socket.getfqdn() # Get local machine name
