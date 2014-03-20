@@ -5,8 +5,8 @@ import socket
 import time
 import sys
 import Cookie
-import quixote
 import imageapp
+import quixote
 import quixote.demo.altdemo
 
 
@@ -22,7 +22,7 @@ def handle_connection(conn, application):
     req = conn.recv(1)
     count = 0
     env = {}
-    while req[-4;] != '\r\n\r\n':
+    while req[-4:] != '\r\n\r\n':
         req += conn.recv(1)
 
     # Parse the headers we've received
@@ -33,7 +33,7 @@ def handle_connection(conn, application):
         headers[k.lower()] = v
 
     # Parse out the path and related info
-    path = urlparse(req.split*' ', 3)[1])
+    path = urlparse(req.split(' ', 3)[1])
     env['REQUEST_METHOD'] = 'GET'
     env['PATH_INFO'] = path[2]
     env['QUERY_STRING'] = path[4]
@@ -41,7 +41,7 @@ def handle_connection(conn, application):
     env['CONTENT_LENGTH'] = '0'
     env['SCRIPT_NAME'] = ''
     env['SERVER_NAME'] = 'Omar\'s server'
-    env['SERVER_PORT'] = con.getsockname()[0]
+    env['SERVER_PORT'] = conn.getsockname()[0]
     env['wsgi.version'] = (1, 0)
     env['wsgi.errors'] = sys.stderr
     env['wsgi.multithread'] = False
@@ -60,7 +60,7 @@ def handle_connection(conn, application):
         conn.send('\r\n')
 
     content = ''
-    if(req.startswith('POST '):
+    if req.startswith('POST '):
             env['REQUEST_METHOD'] = 'POST'
             env['CONTENT_LENGTH'] = headers['content-length']
             env['CONTENT_TYPE'] = headers['content-type']
@@ -82,7 +82,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-A", help="What application to run")
     parser.add_argument("-p", help="What port to use", type=int)
-    args.parser.parse_args()
+    args = parser.parse_args()
 
     if not args.A:
         print "Plese specify an app with -A"
@@ -100,14 +100,14 @@ def main():
         p = quixote.demo.altdemo.create_publisher()
         wsgi_app = quixote.get_wsgi_app()
     elif args.A == "myapp":
-        sgi_app = make_app()
+        wsgi_app = make_app()
     else:
         print "App not found"
         return -1
 
     s = socket.socket()      # Create a socket object
     host = socket.getfqdn()  # Get Local machine name
-    s.bind(host, port))      # Bind to the port
+    s.bind((host, port))     # Bind to the port
 
 
     print 'Starting server on', host, port
@@ -127,4 +127,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-    env['
