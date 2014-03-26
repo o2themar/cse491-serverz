@@ -1,4 +1,4 @@
-#!/user/bin/env python
+#/user/bin/env python
 import random
 import argparse
 import socket
@@ -17,6 +17,12 @@ from StringIO import StringIO
 from app import make_app
 from wsgiref.validate import validator
 
+
+####  Global ######
+# Setup should only occur once
+setup_complete = False
+
+
 def handle_connection(conn, application):
     # Start reading in data from the connection
     req = conn.recv(1)
@@ -33,14 +39,14 @@ def handle_connection(conn, application):
         headers[k.lower()] = v
 
     # Parse out the path and related info
-    path = urlparse(req.split(' ', 3)[1])
+    path = urlparse(req.split(' ', )[1])
     env['REQUEST_METHOD'] = 'GET'
     env['PATH_INFO'] = path[2]
     env['QUERY_STRING'] = path[4]
     env['CONTENT_TYPE'] = 'text/html'
     env['CONTENT_LENGTH'] = '0'
     env['SCRIPT_NAME'] = ''
-    env['SERVER_NAME'] = 'Omar\'s server'
+    env['SERVER_NAME'] = 'local_host'
     env['SERVER_PORT'] = conn.getsockname()[0]
     env['wsgi.version'] = (1, 0)
     env['wsgi.errors'] = sys.stderr
@@ -51,7 +57,7 @@ def handle_connection(conn, application):
     env['HTTP_COOKIE'] = headers['cookie']
 
     def start_response(status, response_headers):
-        conn.send('HTTP/1.0')
+        conn.send('HTTP/1.0 ')
         conn.send(status)
         conn.send('\r\n')
         for pair in response_headers:
@@ -67,8 +73,9 @@ def handle_connection(conn, application):
             print headers['content-length']
 
             while len(content) < int(headers['content-length']):
-                content += conn.recv(1)
+                content += conn.recv(int(headers['content-length']))
 
+    env['CONTENT_LENGTH'] = str(env['CONTENT_LENGTH'])
     env['wsgi.input'] = StringIO(content)
     #validator_app = validator(appl)
     result = application(env, start_response)
@@ -83,6 +90,8 @@ def main():
     parser.add_argument("-A", help="What application to run")
     parser.add_argument("-p", help="What port to use", type=int)
     args = parser.parse_args()
+    
+    global setup_complete
 
     if not args.A:
         print "Plese specify an app with -A"
@@ -93,11 +102,15 @@ def main():
         port = random.randint(8000, 9999)
 
     if args.A == "image":
-        imageapp.setup()
-        p = imageapp.create_publisher()
+        if not setup_complete:
+            imageapp.setup()
+            p = imageapp.create_publisher()
+            setup_complete = True
         wsgi_app = quixote.get_wsgi_app()
     elif args.A == "altdemo":
-        p = quixote.demo.altdemo.create_publisher()
+        if not setup_complete:
+            p = quixote.demo.altdemo.create_publisher()
+            setup_complete = True
         wsgi_app = quixote.get_wsgi_app()
     elif args.A == "myapp":
         wsgi_app = make_app()

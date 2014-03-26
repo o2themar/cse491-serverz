@@ -1,0 +1,19 @@
+follow Content
+code 200
+back
+
+follow Files
+code 200
+back
+
+follow Images
+code 200
+
+go /form
+
+formvalue 1 firstname sir
+formvalue 1 lastname test
+submit
+
+code 200
+find "sir test"
