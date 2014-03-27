@@ -1,14 +1,14 @@
 follow login
-formvalue 1 name yolo
+formvalue 1 name Bob
 submit
 
-find "Welcome, yolo!"
+find "Welcome, Bob!"
 
 go /
-find "Hello, yolo."
+find "Hello, Bob."
 
 follow logout
-find "Goodbye, yolo."
+find "Goodbye, Bob."
 
 follow "start over"
 notfind "Hello"

@@ -23,20 +23,20 @@ code 200
 find "hello world this is a text file"
 
 go /form
-formvalue 1 ccn "beans"
-formvalue 1 ssn "dingus"
+formvalue 1 ccn "12345"
+formvalue 1 ssn "54321"
 submit
 code 200
-find "beans"
-find "dingus"
+find "12345"
+find "54321"
 
 go /form_post
-formvalue 1 ccn "beans"
-formvalue 1 ssn "dingus"
+formvalue 1 ccn "12345"
+formvalue 1 ssn "54321"
 submit
 code 200
-find "beans"
-find "dingus"
+find "12345"
+find "54321"
 
 go /image
 code 200

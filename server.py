@@ -36,6 +36,7 @@ def handle_connection(conn, application):
     headers = {}
     for line in data.split('\r\n')[:-2]:
         k, v = line.split(': ', 1)
+        print k
         headers[k.lower()] = v
 
     # Parse out the path and related info
@@ -46,15 +47,18 @@ def handle_connection(conn, application):
     env['CONTENT_TYPE'] = 'text/html'
     env['CONTENT_LENGTH'] = '0'
     env['SCRIPT_NAME'] = ''
-    env['SERVER_NAME'] = 'local_host'
-    env['SERVER_PORT'] = conn.getsockname()[0]
+    env['SERVER_NAME'] = conn.getsockname()[0]
+    env['SERVER_PORT'] = str(conn.getsockname()[1])
     env['wsgi.version'] = (1, 0)
     env['wsgi.errors'] = sys.stderr
     env['wsgi.multithread'] = False
     env['wsgi.multiprocess'] = False
     env['wsgi.run_once'] = False
     env['wsgi.url_scheme'] = 'http'
-    env['HTTP_COOKIE'] = headers['cookie']
+
+    if('cookie' in headers):
+        env['HTTP_COOKIE'] = headers['cookie']
+    
 
     def start_response(status, response_headers):
         conn.send('HTTP/1.0 ')
@@ -65,6 +69,7 @@ def handle_connection(conn, application):
             conn.send(key + ': ' + header + '\r\n')
         conn.send('\r\n')
 
+    
     content = ''
     if req.startswith('POST '):
             env['REQUEST_METHOD'] = 'POST'
@@ -74,10 +79,13 @@ def handle_connection(conn, application):
 
             while len(content) < int(headers['content-length']):
                 content += conn.recv(int(headers['content-length']))
+    
 
-    env['CONTENT_LENGTH'] = str(env['CONTENT_LENGTH'])
+    env['CONTENT_LENGTH'] = str(env['CONTENT_LENGTH']) 
     env['wsgi.input'] = StringIO(content)
-    #validator_app = validator(appl)
+
+   
+   #validator_app = validator(appl)
     result = application(env, start_response)
     for data in result:
         conn.send(data)
@@ -118,10 +126,10 @@ def main():
         print "App not found"
         return -1
 
-    s = socket.socket()      # Create a socket object
-    host = socket.getfqdn()  # Get Local machine name
+    socket_module = socket
+    s = socket_module.socket()      # Create a socket object
+    host = socket_module.getfqdn()  # Get Local machine name
     s.bind((host, port))     # Bind to the port
-
 
     print 'Starting server on', host, port
     print 'The Web server URL for this would be http://%s:%d/' % (host, port)
