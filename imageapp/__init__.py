@@ -18,7 +18,7 @@ def setup():                            # stuff that should be run once.
 
 
     some_data = open('imageapp/dice.png', 'rb').read()
-    image.add_image(some_data)
+    image.add_image('imageapp/dice.png', some_data)
     
 
 def teardown():                         # stuff that should be run once.
