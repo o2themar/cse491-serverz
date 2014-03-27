@@ -28,6 +28,27 @@ class RootDirectory(Directory):
         the_file.close()
         return quixote.redirect('./')
 
+    @export(name='upload_ajax')
+    def upload_ajax(self):
+        return html.render('upload_ajax.html')
+
+    @export(name='upload_ajax_receive')
+    def upload_ajax_receive(self):
+        request = quixote.get_request()
+        print request.form.keys()
+
+        the_file = request.form['file']
+        print dir(the_file)
+        print 'received file with name:', the_file.base_filename
+        data = the_file.fp.read()
+
+        image.add_image(data)
+
+        response = quixote.get_response()
+        response.set_content_type('image/png')
+        return image.get_latest_image()
+
+
     @export(name='image')
     def image(self):
         return html.render('image.html')
