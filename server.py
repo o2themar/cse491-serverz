@@ -122,6 +122,12 @@ def main():
         wsgi_app = quixote.get_wsgi_app()
     elif args.A == "myapp":
         wsgi_app = make_app()
+    elif args.A == 'quotes':
+        
+        from quotes.apps import QuotesApp as make_app
+
+        wsgi_app = make_app('quotes.txt', 'quotes/html')
+
     else:
         print "App not found"
         return -1
