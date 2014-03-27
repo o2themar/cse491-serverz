@@ -127,7 +127,9 @@ def main():
         from quotes.apps import QuotesApp as make_app
 
         wsgi_app = make_app('quotes.txt', 'quotes/html')
-
+    elif args.A == 'chat':
+        from chat.apps import ChatApp as make_app
+        wsgi_app = make_app('chat/html')
     else:
         print "App not found"
         return -1
