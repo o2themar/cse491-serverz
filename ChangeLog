@@ -13,6 +13,12 @@
 
 2014-03-27 Omar Ali <o2themar6@live.com>
 
-*For HW 9 I did project 12 and implemented AJAX image upload with JQuery.
+* For hw8 I did project 8 to support Tiff, tif and jpeg for the image app.
+* Use upload 2 for testing this feature
 
-Testing push.
+
+2014-03-27 Omar Ali <o2themar6@live.com>
+* For  hw9 I did project 12 and implemented AJAX image upload with JQuery.
+* This should automatically be done when you upload an image in the image app.
+
+
