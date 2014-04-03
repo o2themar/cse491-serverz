@@ -6,6 +6,16 @@
 
  * added basic html response 
 
+
+2014-04-03
+*For HW 10 I implemented project 2 for a WSGI middleware componenet that does
+playback and recording of all WSGI traffic between server and component.
+
+*To use add the -M flag at the end of the argument list for server.py
+*For example: python server.py -A image -M
+
+
+
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
 * Initialized repository, created server.py and README.
