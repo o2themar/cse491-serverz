@@ -8,6 +8,7 @@ import Cookie
 import imageapp
 import quixote
 import quixote.demo.altdemo
+import cgi
 
 
 #from quixote.demo.altdemo import create_publisher
@@ -85,7 +86,7 @@ def handle_connection(conn, application):
     env['wsgi.input'] = StringIO(content)
 
    
-   #validator_app = validator(appl)
+    validator_app = validator(application)
     result = application(env, start_response)
     for data in result:
         conn.send(data)
@@ -97,6 +98,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-A", help="What application to run")
     parser.add_argument("-p", help="What port to use", type=int)
+    parser.add_argument('-M', '--Middleware', action='store_true', default='False', help="adding the "+ \
+            "-M flag will play communication between the server and components")
     args = parser.parse_args()
     
     global setup_complete
@@ -133,6 +136,13 @@ def main():
     else:
         print "App not found"
         return -1
+
+    print "This is args.Middleware: "
+    print args.Middleware
+    if args.Middleware == True:
+            print "Using Middleware Playback!\n"
+            from middleware_playback import MiddlewarePlayback
+            wsgi_app = MiddlewarePlayback(wsgi_app)
 
     socket_module = socket
     s = socket_module.socket()      # Create a socket object

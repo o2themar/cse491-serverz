@@ -2,6 +2,7 @@ import socket
 from cStringIO import StringIO
 import urlparse
 
+
 class StartResponse(object):
     def __call__(self, status, headers):
         self.status = status

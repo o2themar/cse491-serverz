@@ -30,11 +30,11 @@ class ChatApp(object):
       x = []
       for m in new_messages:
          x.append("""\
-<message>
- <author>%s</author>
- <text>%s</text>
-</message>
-""" % (m.user, m.message))
+                <message>
+                <author>%s</author>
+                <text>%s</text>
+                </message>
+                """ % (m.user, m.message))
 
       if x:                             # new messages received?
          # yes
@@ -43,13 +43,12 @@ class ChatApp(object):
          status = 2                     # no new messages
 
       xml = """
-<?xml version="1.0"?>
-<response>
- <status>%d</status>
- <time>%f</time>
-%s
-</response>
-""" % (status, timestamp, "".join(x))
+      <?xml version="1.0"?>
+      <response>
+      <status>%d</status>
+      <time>%f</time>
+      %s</response>
+      """ % (status, timestamp, "".join(x))
 
       return xml
 
