@@ -4,9 +4,6 @@ from quixote.directory import Directory, export, subdir
 from . import html, image
 
 
-#Change later to using SQLite
-global users
-users = dict()
 
 
 class RootDirectory(Directory):
@@ -25,20 +22,38 @@ class RootDirectory(Directory):
     def do_login(self):
         request = quixote.get_request()
         print "User: %s Password: %s\n\n"%(request.form['username'], request.form['password'])
+        
+        conn = sqlite3.connect('MBimageapp.db')
+        c = conn.cursor()
 
-        if request.form['username'] in users.keys():
-            if users[request.form['username']] == request.form['password']:
-                print "request.form['username'] = %s"%(request.form['username'])
-                request.response.set_cookie('User', request.form['username'])
+        conn.text_factory = str
+
+        t = (request.form['username'], request.form['password'])
+        for row in c.execute('SELECT * FROM imageapp WHERE username=? AND password=?', t):
+            if(row[0] == request.form['username']) & (row[1] == request.form['passowrd']):
+                request.response.set_cookie('User', row[0])
+                conn.close()
                 return "<p>Login successful! :) <a href='/'> return to index</a></p>"
+        conn.close()
+
         return "<p>Loging unsuccessful! <a href='/'> return to index</a></p>"
 
     @export(name='register')
     def register(self):
         request = quixote.get_request()
         if request.form['password'] == request.form['confirm']:
-            users[request.form['username']] = request.form['password']
+            conn = sqlite3.connect('MBimageapp.db')
+            c = conn.cursor()
+
+            conn.text_factory = str
+
+            s = "INSERT INTO imageapp VALUES ('%s', '%s', 'NULL')" % (request.form['username'], request.form['password'])
+
+            c.execute(s)
             
+            conn.commit()
+            conn.close()
+
             request.response.set_cookie('User', request.form['username'])
             
             return "<p>Account successfully created!<a href='/'> return to index</a></p>"
