@@ -6,6 +6,7 @@ import os
 
 from cgi import parse_qs, escape, FieldStorage
 
+
 def base_app(environ, start_response):
     return handle_connection(environ,start_response)
 
@@ -85,7 +86,7 @@ def handle_connection(environ,start_response):
         content = handle_content(environ, start_response, jinja)
     elif path == '/image':
         content = handle_image(environ, start_response, jinja)
-	encodeFlag = False
+        encodeFlag = False
     elif path == '/file':
         content = handle_file(environ, start_response, jinja)
     	encodeFlag = False
