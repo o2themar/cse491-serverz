@@ -33,4 +33,6 @@ change this later using the SQLite database. But for now in the image app you
 can create a user and login and it will check if the user is already created.
 The images are uploaded to the user so they are mapped by user.
 
-
+2014-04-10 Omar Ali
+*For HW 11 I addded data persistance in sqlite (Project 16). Now images are
+stored in the database rather than a dictionary.
