@@ -39,3 +39,9 @@ The images are uploaded to the user so they are mapped by user.
 2014-04-10 Omar Ali
 *For HW 11 I addded data persistance in sqlite (Project 16). Now images are
 stored in the database rather than a dictionary.
+
+2014-04-17 Omar Ali
+* For HW 11 I tried implementing a commenting system (Project 8) for the images but I was
+running into some problems with the database not creating the table.
+
+

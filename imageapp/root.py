@@ -2,7 +2,8 @@ import quixote
 from quixote.directory import Directory, export, subdir
 
 from . import html, image
-
+from quixote.util import StaticFile
+import os.path
 
 
 
@@ -23,7 +24,7 @@ class RootDirectory(Directory):
         request = quixote.get_request()
         print "User: %s Password: %s\n\n"%(request.form['username'], request.form['password'])
         
-        conn = sqlite3.connect('MBimageapp.db')
+        conn = sqlite3.connect('images.sqlite')
         c = conn.cursor()
 
         conn.text_factory = str
@@ -42,7 +43,7 @@ class RootDirectory(Directory):
     def register(self):
         request = quixote.get_request()
         if request.form['password'] == request.form['confirm']:
-            conn = sqlite3.connect('MBimageapp.db')
+            conn = sqlite3.connect('images.sqlite')
             c = conn.cursor()
 
             conn.text_factory = str
@@ -81,7 +82,7 @@ class RootDirectory(Directory):
         data = the_file.fp.read()
          
         #image.add_image(data)
-        image.add_image(data, quixote.get_cookie("User") )
+        image.add_image(the_file.base_filename, data, quixote.get_cookie("User") )
 
         the_file.close()
         return quixote.redirect('./')
@@ -101,7 +102,7 @@ class RootDirectory(Directory):
         data = the_file.fp.read()
 
         #image.add_image(data)
-        image.add_image(data, quixote.get_cookie("User") )
+        image.add_image(the_file.base_filename, data, quixote.get_cookie("User") )
 
         response = quixote.get_response()
         response.set_content_type('image/png')
@@ -119,3 +120,51 @@ class RootDirectory(Directory):
         response.set_content_type('image/png')
         img = image.get_latest_image()
         return img
+
+    @export(name='get_comments')
+    def get_comments(self):
+        response = quixote.get_response()
+        request = quixote.get_request()
+
+        img = retrieve_image(request)
+
+        all_comments = []
+        for comment in img.get_comments():
+            print comment
+            all_comments.append("""\
+                    <comment>
+                    <text>%s</text>
+                    </comment>
+                    """ % (comment))
+
+
+            xml = """
+            <?xml version="1.0"?>
+            <comments>
+            %s
+            </comments>
+            """ % ("".join(all_comments))
+
+            return xml
+
+        @export(name='add_comment')
+        def add_comment(self):
+            response = quixote.get_response()
+            request = quixote.get_request()
+
+            img = retrieve_image(request)
+
+            try:
+                comment = request.form['comment']
+            except:
+                return
+
+            img.add_comment(comment)
+
+        def retrieve_image(request):
+            try:
+                img = image.get_image(int(request.form['num']))
+            except:
+                img = image.get_latest_image()
+
+            return img
