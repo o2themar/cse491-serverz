@@ -140,8 +140,6 @@ def main():
         print "App not found"
         return -1
 
-    print "This is args.Middleware: "
-    print args.Middleware
     if args.Middleware == True:
             print "Using Middleware Playback!\n"
             from middleware_playback import MiddlewarePlayback

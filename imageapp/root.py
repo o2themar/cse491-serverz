@@ -4,8 +4,7 @@ from quixote.directory import Directory, export, subdir
 from . import html, image
 from quixote.util import StaticFile
 import os.path
-
-
+import sqlite3
 
 class RootDirectory(Directory):
     _q_exports = []
@@ -30,8 +29,8 @@ class RootDirectory(Directory):
         conn.text_factory = str
 
         t = (request.form['username'], request.form['password'])
-        for row in c.execute('SELECT * FROM imageapp WHERE username=? AND password=?', t):
-            if(row[0] == request.form['username']) & (row[1] == request.form['passowrd']):
+        for row in c.execute('SELECT * FROM imageapp1 WHERE username=? AND password=?', t):
+            if(row[0] == request.form['username']) & (row[1] == request.form['password']):
                 request.response.set_cookie('User', row[0])
                 conn.close()
                 return "<p>Login successful! :) <a href='/'> return to index</a></p>"
@@ -48,7 +47,7 @@ class RootDirectory(Directory):
 
             conn.text_factory = str
 
-            s = "INSERT INTO imageapp VALUES ('%s', '%s', 'NULL')" % (request.form['username'], request.form['password'])
+            s = "INSERT INTO imageapp1 VALUES ('%s', '%s', 'NULL')" % (request.form['username'], request.form['password'])
 
             c.execute(s)
             
@@ -118,7 +117,8 @@ class RootDirectory(Directory):
     def image_raw(self):
         response = quixote.get_response()
         response.set_content_type('image/png')
-        img = image.get_latest_image()
+        user = quixote.get_cookie("User")
+        img = image.get_image(user)
         return img
 
     @export(name='get_comments')

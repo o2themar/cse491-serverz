@@ -23,12 +23,11 @@ def setup():                            # stuff that should be run once.
 
     some_data = open('imageapp/dice.png', 'rb').read()
     image.add_image('imageapp/dice.png', some_data, None)
-    
 def create_database():
     print 'creating database'
     db = sqlite3.connect('images.sqlite')
     c = db.cursor()
-    c.execute('CREATE TABLE imageapp1 (username TEXT, password TEXT, picture BLOB)')
+    c.execute('CREATE TABLE imageapp1 (username TEXT, password TEXT, picture BLOB, comment TEXT)')
     db.commit()
     db.close()
 
