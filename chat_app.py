@@ -5,6 +5,8 @@ import traceback
 import random
 import time
 import cgi
+import socket
+
 
 class Message(object):
    def __init__(self, timestamp, user, message):

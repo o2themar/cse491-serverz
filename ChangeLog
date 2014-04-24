@@ -7,20 +7,15 @@
  * added basic html response 
 
 
-2014-04-03
-*For HW 10 I implemented project 2 for a WSGI middleware componenet that does
-playback and recording of all WSGI traffic between server and component.
-
-*To use add the -M flag at the end of the argument list for server.py
-*For example: python server.py -A image -M
-
-
-
 
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
 * Initialized repository, created server.py and README.
 
+
++2014-03-27 Omar Ali <o2themar6@live.com>
+ * For hw 8 did project 8 to support Tiff, tif and jpeg for the image app.
+ * Use upload 2 for testing this feature
 
 2014-03-27 Omar Ali <o2themar6@live.com>
 
@@ -34,10 +29,26 @@ playback and recording of all WSGI traffic between server and component.
 
 
 
+2014-04-03
+*For HW 10 I implemented project 2 for a WSGI middleware componenet that does
+playback and recording of all WSGI traffic between server and component.
+
+*To use add the -M flag at the end of the argument list for server.py
+*For example: python server.py -A image -M
+
+
 2014-04-10 Omar Ali
-*For HW 10 I implmented the user login and authentication version 1. I plan to
+*For HW 10 I implmented the user login and authentication (project 15) version 1. I plan to
 change this later using the SQLite database. But for now in the image app you
 can create a user and login and it will check if the user is already created.
 The images are uploaded to the user so they are mapped by user.
+
+2014-04-10 Omar Ali
+*For HW 11 I addded data persistance in sqlite (Project 16). Now images are
+stored in the database rather than a dictionary.
+
+2014-04-17 Omar Ali
+* For HW 11 I tried implementing a commenting system (Project 8) for the images but I was
+running into some problems with the database not creating the table.
 
 

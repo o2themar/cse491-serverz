@@ -133,12 +133,13 @@ def main():
     elif args.A == 'chat':
         from chat.apps import ChatApp as make_app
         wsgi_app = make_app('chat/html')
+    elif args.A == "cookie":
+        import cookieapp
+        wsgi_app = cookieapp.wsgi_app
     else:
         print "App not found"
         return -1
 
-    print "This is args.Middleware: "
-    print args.Middleware
     if args.Middleware == True:
             print "Using Middleware Playback!\n"
             from middleware_playback import MiddlewarePlayback
