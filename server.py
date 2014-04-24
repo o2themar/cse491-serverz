@@ -9,7 +9,7 @@ import imageapp
 import quixote
 import quixote.demo.altdemo
 import cgi
-
+import threading
 
 #from quixote.demo.altdemo import create_publisher
 from urlparse import urlparse
@@ -24,8 +24,13 @@ from wsgiref.validate import validator
 setup_complete = False
 
 
+global t #global thread
+
 def handle_connection(conn, application):
     # Start reading in data from the connection
+    if t.is_alive():
+        print "Thread is alive what more proof do you need??????? "
+    
     req = conn.recv(1)
     count = 0
     env = {}
@@ -162,8 +167,10 @@ def main():
         c, (client_host, client_port) = s.accept()
         print 'Got connection from', client_host, client_port
 
-        handle_connection(c, wsgi_app)
-
+        #handle_connection(c, wsgi_app)
+        global t
+        t = threading.Thread(target=handle_connection, args=(c, wsgi_app))
+        t.start()
 if __name__ == '__main__':
     main()
 

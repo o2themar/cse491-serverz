@@ -55,7 +55,7 @@ def get_image(user):
 
     conn.text_factory = bytes
 
-    image = c.fetchone()[0]
+    i, image = c.fetchone()[0]
 
     conn.close()
 
