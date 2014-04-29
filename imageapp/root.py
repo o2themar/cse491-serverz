@@ -16,6 +16,9 @@ class RootDirectory(Directory):
         print "User: %s"%(quixote.get_cookie('User'))
         return html.render('index.html')
 
+    @export(name='jquery')
+    def jquery(self):
+        return open('jquery-1.11.0.min.js').read()
 
     @export(name='css')
     def css(self):
@@ -250,7 +253,7 @@ class RootDirectory(Directory):
             i = int(request.form['num'])
         except:
             i = -1
-
+        print "This is i: " + i
         return image.get_image_score(i)
 
     @export(name='increment_score')

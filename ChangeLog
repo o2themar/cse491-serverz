@@ -17,17 +17,6 @@
  * For hw 8 did project 8 to support Tiff, tif and jpeg for the image app.
  * Use upload 2 for testing this feature
 
-2014-03-27 Omar Ali <o2themar6@live.com>
-
-* For hw8 I did project 8 to support Tiff, tif and jpeg for the image app.
-* Use upload 2 for testing this feature
-
-
-2014-03-27 Omar Ali <o2themar6@live.com>
-* For  hw9 I did project 12 and implemented AJAX image upload with JQuery.
-* This should automatically be done when you upload an image in the image app.
-
-
 
 2014-04-03
 *For HW 10 I implemented project 2 for a WSGI middleware componenet that does
@@ -59,5 +48,16 @@ is printed every time the thread is run so you should see it in the prints in
 the terminal.
 
 
+2014-04-29 Omar Ali
+* Fixed data persistancy using SQLite. 
+* Tried implementing the ability to
+comment on the image(project 8) but couldn't get it working with the database.
+* Tried implmenting project 27 which lets you star and rank an image but
+couldn't get that working.
+* Tried implmenting project 23 which adds a url handler and refers to the
+image by number but couldn't get it working.
+* Swiped a templete from oswd.org and all the content is in a folder called
+img. In root.py I commented out the CSS image loading because I didn't have
+enough time to figure out how to position all the images so it looks nice.
 
 

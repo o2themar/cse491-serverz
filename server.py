@@ -64,7 +64,8 @@ def handle_connection(conn, application):
 
     if('cookie' in headers):
         env['HTTP_COOKIE'] = headers['cookie']
-    
+    else:
+        env['HTTP_COOKIE'] = ''
 
     def start_response(status, response_headers):
         conn.send('HTTP/1.0 ')
